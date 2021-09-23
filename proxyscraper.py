@@ -1,7 +1,6 @@
 import requests
 import json
-import colorama
-import logging
+
 
 #Executing Status Request
 
@@ -48,7 +47,16 @@ outfile = open("proxies.txt", "w")
 outfile.write(ProxyAPI.text)
 outfile.close()
 
+#Deleting Empty Lines in File
 
+output = ""
+with open("E:\PycharmProjects\FalixRestartV2\proxies.txt") as f:
+    for line in f:
+        if not line.isspace():
+            output += line
+
+f = open("proxies.txt", "w")
+f.write(output)
 
 print("Proxies have been saved to proxies.txt")
 input("Press Enter to close")
