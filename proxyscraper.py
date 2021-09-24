@@ -1,12 +1,15 @@
 import json
-import time
-
 import requests
 
 # Executing Status Request
 ProxyStatus = requests.get("https://api.proxyscrape.com/v2/?request=proxyinfo&simplified=true")
 
 # Printing Proxy Status
+
+
+OnlyPS = input("Do you want to use all Proxie Sources? (else only ProxieScrape) (yes/no): \n")
+
+
 
 proxystatusfile = open("proxiecountall.json", "w")
 proxystatusfile.write(ProxyStatus.text)
@@ -15,7 +18,9 @@ proxystatusfile.close()
 with open("proxiecountall.json") as file:
     ProxyStatus = json.load(file)
 
-print(str(ProxyStatus["proxy_count"]) + " Proxies are avalible\n")
+print(str(ProxyStatus["proxy_count"]) + " Proxies are avalible from ProxieScrape, other Sources cant be counted before scraping.\n")
+
+
 
 # Getting Values for Request
 HTTPS = ("yes")
@@ -32,14 +37,29 @@ else:
 
 TIMEOUT = input("Which Timeout?: \n")
 
-# Executing API Request
-ProxyAPI = requests.get(
-    "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=" + TYPE + "&timeout=" + TIMEOUT + "&country=all&ssl=+" + SSL + "&anonymity=all")
+# Executing API Request (ProxyScrape)
+ProxyAPI = requests.get("https://api.proxyscrape.com/v2/?request=displayproxies&protocol=" + TYPE + "&timeout=" + TIMEOUT + "&country=all&ssl=+" + SSL + "&anonymity=all")
 print(ProxyAPI.text)
 
-# Writing Proxies to File
+# Writing ProxyScrape-Proxies to File
 outfile = open("proxies.txt", "w")
 outfile.write(ProxyAPI.text)
+outfile.close()
+
+# Executing API Request (openproxylist.xyz)
+
+if TYPE == ("all"):
+
+    ProxyAPI2 = requests.get("https://api.openproxylist.xyz/http.txt")
+    print(ProxyAPI2.text)
+
+else:
+
+    ProxyAPI2 = requests.get("https://api.openproxylist.xyz/" + TYPE + ".txt")
+    print(ProxyAPI2.text)
+
+outfile = open("proxies.txt", "a")
+outfile.write(ProxyAPI2.text)
 outfile.close()
 
 # Deleting Empty Lines in File
