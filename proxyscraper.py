@@ -1,25 +1,32 @@
 import json
+import os
 import requests
 
 # Executing Status Request
 ProxyStatus = requests.get("https://api.proxyscrape.com/v2/?request=proxyinfo&simplified=true")
 
-# Printing Proxy Status
-
 
 OnlyPS = input("Do you want to use all Proxie Sources? (else only ProxieScrape) (yes/no): \n")
 
-
+# Setting Up Proxie Counter
 
 proxystatusfile = open("proxiecountall.json", "w")
 proxystatusfile.write(ProxyStatus.text)
 proxystatusfile.close()
 
+
+
 with open("proxiecountall.json") as file:
     ProxyStatus = json.load(file)
 
+# Printing Proxy Counter
+
 print(str(ProxyStatus["proxy_count"]) + " Proxies are avalible from ProxieScrape, other Sources cant be counted before scraping.\n")
 
+# Removing Proxie Counter File
+
+if os.path.exists("proxiecountall.json"):
+    os.remove("proxiecountall.json")
 
 
 # Getting Values for Request
